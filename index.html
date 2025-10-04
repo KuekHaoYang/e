@@ -15,6 +15,7 @@
             height: 100vh;
             margin: 0;
             text-align: center;
+            overflow: hidden; /* 防止按钮过大时出现滚动条 */
         }
         /* 内容容器 */
         .container {
@@ -42,7 +43,7 @@
             border-radius: 10px;
             color: white;
             font-weight: bold;
-            /* 关键：让尺寸变化有平滑的过渡动画效果 */
+            /* 关键：让尺寸和文本变化有平滑的过渡动画效果 */
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         /* “有”按钮样式 */
@@ -85,6 +86,21 @@
         const questionArea = document.getElementById('question-area');
         const finalMessage = document.getElementById('final-message');
 
+        // 【新增】为“没有”按钮准备一个备选文本的数组
+        const noPhrases = [
+            "真的没有吗？",
+            "再仔细想想？",
+            "骗人！",
+            "你明明就有！",
+            "快点承认吧！",
+            "别挣扎了~",
+            "点‘有’啦！",
+            "求求你啦"
+        ];
+        
+        // 【新增】一个计数器，用来记录“没有”按钮被点击的次数
+        let noClickCount = 0;
+
         // 定义“有”按钮的初始尺寸
         let yesBtnFontSize = 16;
         let yesBtnPaddingVertical = 10;
@@ -92,17 +108,20 @@
 
         // 给“没有”按钮添加点击事件
         noBtn.addEventListener('click', function() {
-            // 每次点击，都增加“有”按钮的尺寸
-            yesBtnFontSize += 4; // 字体变大
-            yesBtnPaddingVertical += 3; // 垂直内边距增加
-            yesBtnPaddingHorizontal += 6; // 水平内边距增加
+            // 【新增】每次点击，都从数组中取一个新的文本来更新按钮
+            // 使用 % (取余) 运算符来确保索引不会超出数组范围，实现循环
+            noBtn.textContent = noPhrases[noClickCount % noPhrases.length];
+            noClickCount++;
 
-            // 将新的尺寸应用到“有”按钮上
+            // 保留原有的功能：让“有”按钮变得更大
+            yesBtnFontSize += 4;
+            yesBtnPaddingVertical += 3;
+            yesBtnPaddingHorizontal += 6;
             yesBtn.style.fontSize = yesBtnFontSize + 'px';
             yesBtn.style.padding = `${yesBtnPaddingVertical}px ${yesBtnPaddingHorizontal}px`;
         });
 
-        // 给“有”按钮添加点击事件
+        // “有”按钮的点击事件保持不变
         yesBtn.addEventListener('click', function() {
             // 隐藏问题和按钮
             questionArea.style.display = 'none';
