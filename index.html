@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>臭山猪</title>
+    <title>你有问吗？</title>
     <style>
         /* 页面整体样式 */
         body {
-            background-color: #f0f8ff; /* 淡蓝色背景 */
-            font-family: 'Helvetica Neue', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', 'Microsoft YaHei', sans-serif;
+            background-color: #f4f7f6; /* 淡雅的背景色 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,24 +19,18 @@
         /* 内容容器 */
         .container {
             background-color: white;
-            padding: 30px 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            min-width: 300px;
         }
         h1 {
             color: #333;
-        }
-        h2 {
-            color: #555;
-            margin-top: -10px;
-        }
-        p {
-            font-size: 1.2em;
-            color: #666;
+            font-size: 2.5em;
         }
         /* 按钮容器 */
         .buttons {
-            margin-top: 20px;
+            margin-top: 30px;
         }
         /* 按钮通用样式 */
         button {
@@ -45,23 +39,25 @@
             margin: 0 10px;
             cursor: pointer;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             color: white;
-            transition: all 0.3s ease; /* 让变化更平滑 */
+            font-weight: bold;
+            /* 关键：让尺寸变化有平滑的过渡动画效果 */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        /* “是”按钮样式 */
+        /* “有”按钮样式 */
         #yes-btn {
-            background-color: #4CAF50; /* 绿色 */
+            background-color: #28a745; /* 肯定的绿色 */
         }
-        /* “不是”按钮样式 */
+        /* “没有”按钮样式 */
         #no-btn {
-            background-color: #f44336; /* 红色 */
+            background-color: #dc3545; /* 否定的红色 */
         }
-        /* 最终显示的 Nice 消息 */
-        #nice-message {
+        /* 最终显示的消息 */
+        #final-message {
             display: none; /* 默认隐藏 */
-            font-size: 4em;
-            color: #ff69b4; /* 漂亮的粉色 */
+            font-size: 3.5em;
+            color: #007bff; /* 漂亮的蓝色 */
             font-weight: bold;
         }
     </style>
@@ -69,61 +65,49 @@
 <body>
 
     <div class="container">
-        <!-- 初始显示的文本内容 -->
-        <div id="initial-content">
-            <h1>臭山猪为什么不理我</h1>
-            <h2>臭山猪</h2>
-            <p>山猪是臭的吗</p>
+        <!-- 初始问题区域 -->
+        <div id="question-area">
+            <h1>你有问吗？</h1>
             <div class="buttons">
-                <button id="yes-btn">是</button>
-                <button id="no-btn">不是</button>
+                <button id="yes-btn">有</button>
+                <button id="no-btn">没有</button>
             </div>
         </div>
 
-        <!-- 点击“是”之后显示的内容 -->
-        <h1 id="nice-message">nice</h1>
+        <!-- 最终显示的消息 -->
+        <h1 id="final-message">我就知道！😉</h1>
     </div>
 
     <script>
         // 获取需要操作的元素
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
-        const initialContent = document.getElementById('initial-content');
-        const niceMessage = document.getElementById('nice-message');
+        const questionArea = document.getElementById('question-area');
+        const finalMessage = document.getElementById('final-message');
 
-        // “不是”按钮的备选文本数组
-        const noPhrases = [
-            "真的吗？不考虑吗",
-            "再想想看嘛",
-            "求求你了",
-            "选‘是’吧，好不好",
-            "拜托拜托！",
-            "你点“是”我就理你",
-        ];
+        // 定义“有”按钮的初始尺寸
+        let yesBtnFontSize = 16;
+        let yesBtnPaddingVertical = 10;
+        let yesBtnPaddingHorizontal = 20;
 
-        let noClickCount = 0; // 记录“不是”按钮被点击的次数
-        let yesBtnFontSize = 16; // “是”按钮的初始字体大小
-        let yesBtnPadding = 10;  // “是”按钮的初始内边距
-
-        // 给“不是”按钮添加点击事件
+        // 给“没有”按钮添加点击事件
         noBtn.addEventListener('click', function() {
-            // 循环使用数组中的文本
-            noBtn.textContent = noPhrases[noClickCount % noPhrases.length];
-            noClickCount++;
+            // 每次点击，都增加“有”按钮的尺寸
+            yesBtnFontSize += 4; // 字体变大
+            yesBtnPaddingVertical += 3; // 垂直内边距增加
+            yesBtnPaddingHorizontal += 6; // 水平内边距增加
 
-            // 放大“是”按钮
-            yesBtnFontSize += 6; // 字体变大
-            yesBtnPadding += 4;  // 内边距变大，让按钮整体变大
+            // 将新的尺寸应用到“有”按钮上
             yesBtn.style.fontSize = yesBtnFontSize + 'px';
-            yesBtn.style.padding = yesBtnPadding + 'px ' + (yesBtnPadding * 2) + 'px';
+            yesBtn.style.padding = `${yesBtnPaddingVertical}px ${yesBtnPaddingHorizontal}px`;
         });
 
-        // 给“是”按钮添加点击事件
+        // 给“有”按钮添加点击事件
         yesBtn.addEventListener('click', function() {
-            // 隐藏初始的所有内容
-            initialContent.style.display = 'none';
-            // 显示 "nice"
-            niceMessage.style.display = 'block';
+            // 隐藏问题和按钮
+            questionArea.style.display = 'none';
+            // 显示最终的消息
+            finalMessage.style.display = 'block';
         });
     </script>
 
